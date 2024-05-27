@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name ="viewport" content="width=device-width">
+    <link rel="icon" type="image/x-icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqGL2nCP4K0C-Hd7-fDP0BRozV52tY5jtg7g&s">
+    <title>Weather</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+
+    <header>
+      <div class="header-content">
+        <h1>Weather App</h1>
+      </div>
+    </header>
+
+    <div class="hero">
+    <div class="card">
+      <div class="search">
+        <input type="text" placeholder="Enter City Name" spellcheck="false">
+        <button><img src="images/search.png"></button>
+      </div>
+      <div class="error">
+        <p>Invalid City name</p>
+      </div>
+      <div class="weather">
+        <img src="images/rain.png" class="weather-icon">
+        <h1 class="temp">22°c</h1>
+        <h2 class="city">Hamirpur</h2>
+        <div class="details">
+          <div class="col">
+            <img src="images/humidity.png">
+            <div>
+              <p class="humidity">50%</p>
+              <p>Humidity</p>
+            </div>
+          </div>
+          <div class="col">
+            <img src="images/wind.png">
+            <div>
+              <p class="wind">15 km/h</p>
+              <p>Wind Speed</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <footer>
+    <div class="footer-content">
+      <p>&copy; 2024 Pawan Tiwari. All rights reserved.</p>
+      <p>Designed and developed by <a href="https://nith-gallery.web.app/" target="_blank">Pawan</a></p>
+      <div class="social-links">
+        <a href="https://github.com/thepawanofficial" target="_blank">GitHub</a> |
+        <a href="https://linkedin.com/in/pawantiwari-nith" target="_blank">LinkedIn</a>
+      </div>
+    </div>
+  </footer>
+
+    <script>
+
+        const apiKey = "e4d4aed1914704aa491a2c2bfde79c3c";
+        const apiUrl = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+      
+      const searchBox = document.querySelector(".search input");
+      const searchBtn = document.querySelector(".search button");
+      const weatherIcon = document.querySelector(".weather-icon");
+      const hero = document.querySelector(".hero");
+
+      async function checkWeather(city){
+        const response = await fetch(apiUrl + city + `&appid=${apiKey}`);
+        if(response.status == 404){
+          document.querySelector(".error").style.display = "block";
+          document.querySelector(".weather").style.display = "none";
+        }
+        else{
+          var data = await response.json();
+
+document.querySelector(".city").innerHTML = data.name;
+document.querySelector(".temp").innerHTML = Math.round(data.main.temp) + "°c";
+document.querySelector(".humidity").innerHTML = data.main.humidity + "%";
+document.querySelector(".wind").innerHTML = data.wind.speed + "km/h";
+
+if(data.weather[0].main == "Clouds"){
+  weatherIcon.src = "images/clouds.png";
+  hero.style.backgroundImage = "url('images/cloudy.jpg')";
+}
+else if(data.weather[0].main == "Clear"){
+  weatherIcon.src = "images/clear.png";
+  hero.style.backgroundImage = "url('images/Clear.jpg')";
+
+}
+else if(data.weather[0].main == "Rain"){
+  weatherIcon.src = "images/rain.png";
+  hero.style.backgroundImage = "url('images/rainy.jpg')";
+}
+else if(data.weather[0].main == "Drizzle"){
+  weatherIcon.src = "images/drizzle.png";
+  hero.style.backgroundImage = "url('images/drizzly.jpg')";
+}
+else if(data.weather[0].main == "Mist"){
+  weatherIcon.src = "images/mist.png";
+  hero.style.backgroundImage = "url('images/misty.jpg')";
+}
+
+document.querySelector(".weather").style.display = "block";
+document.querySelector(".error").style.display = "none";
+        }
+        
+      }
+
+      searchBtn.addEventListener("click", ()=>{
+        checkWeather(searchBox.value);
+
+      });
+
+      searchBox.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    checkWeather(searchBox.value);
+  }
+});
+
+    </script>
+
+  </body>
+</html>
